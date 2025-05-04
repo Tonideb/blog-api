@@ -10,9 +10,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Todo {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  text      String
-  completed Boolean
+model BlogPost {
+  id         Int      @id @default(autoincrement())
+  title      String
+  content    Json
+  author     String
+  cardColor  String   @default("#FF5733") 
+  coverImage String?  
+  category   String
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("blog_posts")
 }
