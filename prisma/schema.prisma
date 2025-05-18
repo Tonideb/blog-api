@@ -15,9 +15,11 @@ model BlogPost {
   title      String
   content    Json
   author     String
-  cardColor  String   @default("#FF5733") 
-  coverImage String?  
+  cardColor  String   @default("#FF5733")
+  coverImage String?
   category   String
+  category2  String?
+  category3  String?
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 

@@ -29,9 +29,11 @@ app.get("/posts", async (req, res) => {
         cardColor: true,
         coverImage: true,
         category: true,
+        category2: true,
+        category3: true,
         createdAt: true,
-        updatedAt: true
-      }
+        updatedAt: true,
+      },
     });
     res.json(posts);
   } catch (error) {
@@ -43,13 +45,13 @@ app.get("/posts", async (req, res) => {
 app.get("/posts/:id", async (req, res) => {
   try {
     const post = await prisma.blogPost.findUnique({
-      where: { id: Number(req.params.id) }
+      where: { id: Number(req.params.id) },
     });
-    
+
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
     }
-    
+
     res.json(post);
   } catch (error) {
     console.error("Error fetching post:", error);
@@ -59,8 +61,17 @@ app.get("/posts/:id", async (req, res) => {
 
 app.post("/posts", async (req, res) => {
   try {
-    const { title, content, author, cardColor, coverImage, category } = req.body;
-    
+    const {
+      title,
+      content,
+      author,
+      cardColor,
+      coverImage,
+      category,
+      category2,
+      category3,
+    } = req.body;
+
     if (!title || !content) {
       return res.status(400).json({ error: "Title and content are required" });
     }
@@ -72,10 +83,12 @@ app.post("/posts", async (req, res) => {
         author: author || "Anonymous",
         cardColor: cardColor || "#FF5733", // Default color
         coverImage: coverImage || null,
-        category: category || "Uncategorized"
-      }
+        category: category || "Uncategorized",
+        category2: category2 || "Uncategorized",
+        category3: category3 || "Uncategorized",
+      },
     });
-    
+
     res.status(201).json(post);
   } catch (error) {
     console.error("Error creating post:", error);
@@ -85,12 +98,21 @@ app.post("/posts", async (req, res) => {
 
 app.put("/posts/:id", async (req, res) => {
   try {
-    const { title, content, author, cardColor, coverImage, category } = req.body;
-    
+    const {
+      title,
+      content,
+      author,
+      cardColor,
+      coverImage,
+      category,
+      category2,
+      category3,
+    } = req.body;
+
     const existingPost = await prisma.blogPost.findUnique({
-      where: { id: Number(req.params.id) }
+      where: { id: Number(req.params.id) },
     });
-    
+
     if (!existingPost) {
       return res.status(404).json({ error: "Post not found" });
     }
@@ -102,11 +124,14 @@ app.put("/posts/:id", async (req, res) => {
         content: content || existingPost.content,
         author: author || existingPost.author,
         cardColor: cardColor || existingPost.cardColor,
-        coverImage: coverImage !== undefined ? coverImage : existingPost.coverImage,
-        category: category || existingPost.category
-      }
+        coverImage:
+          coverImage !== undefined ? coverImage : existingPost.coverImage,
+        category: category || existingPost.category,
+        category2: category2 !== undefined ? category2 : existingPost.category2,
+        category3: category3 !== undefined ? category3 : existingPost.category3,
+      },
     });
-    
+
     res.json(post);
   } catch (error) {
     console.error("Error updating post:", error);
@@ -117,12 +142,12 @@ app.put("/posts/:id", async (req, res) => {
 app.delete("/posts/:id", async (req, res) => {
   try {
     await prisma.blogPost.delete({
-      where: { id: Number(req.params.id) }
+      where: { id: Number(req.params.id) },
     });
-    
-    res.json({ 
+
+    res.json({
       status: "ok",
-      message: "Post deleted successfully" 
+      message: "Post deleted successfully",
     });
   } catch (error) {
     console.error("Error deleting post:", error);
@@ -146,7 +171,9 @@ app.get("/", (req, res) => {
         author?: string,
         cardColor?: string (hex color),
         coverImage?: string (url),
-        category?: string
+        category?: string,
+        category2?: string, 
+        category3?: string  
       }
     </pre>
   `);
